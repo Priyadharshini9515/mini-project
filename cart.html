@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+
+    .cart-container {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      padding: 15px 0;
+    }
+
+    .cart-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      margin-right: 20px;
+    }
+
+    .item-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .item-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .actions button {
+      padding: 6px 12px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .remove-btn {
+      background-color: #ff4444;
+      color: white;
+    }
+
+    .buy-btn {
+      background-color: #28a745;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="cart-container">
+    <h2>Your Cart Items</h2>
+    <div id="cartItems"></div>
+  </div>
+
+  <script>
+    const cartItemsContainer = document.getElementById('cartItems');
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function renderCart() {
+      cartItemsContainer.innerHTML = ''; // Clear existing
+      cart.forEach((item, index) => {
+        const itemEl = document.createElement('div');
+        itemEl.classList.add('cart-item');
+
+        itemEl.innerHTML = `
+          <div class="item-info">
+            <img src="${item.img}" alt="${item.name}">
+            <div class="item-details">
+              <strong>${item.name}</strong>
+              <span>${item.price}</span>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="buy-btn">Buy</button>
+            <button class="remove-btn" data-index="${index}">Remove</button>
+          </div>
+        `;
+
+        cartItemsContainer.appendChild(itemEl);
+      });
+
+      // Add remove logic
+      document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = e.target.dataset.index;
+          cart.splice(index, 1);
+          localStorage.setItem('cart', JSON.stringify(cart));
+          renderCart(); // Re-render
+        });
+      });
+
+      // Buy button logic (you can replace with real payment)
+      document.querySelectorAll('.buy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          // alert('Proceeding to buy this item...');
+          window.location.href = "pay.html";
+        });
+      });
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>
