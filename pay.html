@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buy Now</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f8f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    .checkout-container {
+      width: 90%;
+      max-width: 600px;
+      background: #fff;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      text-align: center;
+      color: #007bff;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .payment-methods {
+      margin-top: 20px;
+    }
+
+    .upi img {
+      width: 150px;
+      margin-top: 10px;
+      margin-left: 220px;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .order-summary {
+      margin-bottom: 20px;
+      background: #f1f1f1;
+      padding: 15px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="checkout-container">
+    <h2>Buy Now</h2>
+
+    <div class="order-summary" id="orderSummary"></div>
+
+    <form id="checkoutForm">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" required>
+
+      <label for="phone">Phone Number:</label>
+      <input type="tel" id="phone" required pattern="[0-9]{10}" placeholder="10-digit number">
+
+      <label for="address">Delivery Address:</label>
+      <textarea id="address" rows="3" required></textarea>
+
+      <div class="payment-methods">
+        <label>Payment Method:</label>
+        <select id="payment" onchange="showPaymentOption()">
+          <option value="">--Select Payment Method--</option>
+          <option value="upi">UPI</option>
+          <option value="card">Card</option>
+          <option value="cod">Cash on Delivery</option>
+        </select>
+
+        <div id="upi" class="upi" style="display:none;">
+          <p>Scan to Pay:</p>
+          <img src="img/upi.jpeg" alt="UPI Scanner">
+        </div>
+
+        <div id="card" style="display:none;">
+          <label>Card Number:</label>
+          <input type="text" maxlength="16" placeholder="Enter 16-digit card number">
+          <label>Expiry Date:</label>
+          <input type="month">
+          <label>CVV:</label>
+          <input type="password" maxlength="3" placeholder="*">
+        </div>
+
+        <div id="cod" style="display:none;">
+          <p>Pay with cash upon delivery.</p>
+        </div>
+      </div>
+
+      <button type="submit">Confirm Order</button>
+    </form>
+  </div>
+
+  <script>
+    // Display selected product
+    const order = JSON.parse(localStorage.getItem('buyNow'));
+    const orderSummary = document.getElementById('orderSummary');
+    if (order) {
+      orderSummary.innerHTML = `
+        <h3>Order Summary</h3>
+        <p><strong>Product:</strong> ${order.name}</p>
+        <p><strong>Price:</strong> ₹${order.price}</p>
+      `;
+    }
+
+    // Show payment fields dynamically
+    function showPaymentOption() {
+      document.getElementById('upi').style.display = 'none';
+      document.getElementById('card').style.display = 'none';
+      document.getElementById('cod').style.display = 'none';
+      const selected = document.getElementById('payment').value;
+      if (selected) document.getElementById(selected).style.display = 'block';
+    }
+
+    // Handle order submission
+    document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert("✅ Order Confirmed! Thank you for your purchase.");
+      localStorage.removeItem('buyNow');
+      window.location.href = "index.html";
+    });
+  </script>
+
+</body>
+</html>
+
+
